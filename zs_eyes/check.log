@@ -1,9 +1,0 @@
-2023-08-12 01:05:01,304  set log ....
-2023-08-12 01:05:01,474  ------------start-----------------
-
-2023-08-12 01:05:01,474  [req]: /smc/api/registration/v2/doctorSchedule, {"doctorCode": "3622", "orgCode": "2", "deptId": "1131", "sourceDeptId": "", "majorId": "", "isTodayRegist": "false", "isTeam": ""}
-2023-08-12 01:05:01,591  [resp]: {'code': '0', 'msg': '成功', 'list': [{'deptName': '特需医疗门诊', 'regStatus': '3622', 'deptParentId': '762', 'regLeaveCount': '10', 'majorId': '青光眼', 'regDate': '2023-08-18', 'title': '主任医师', 'type': '高端特需  正教授', 'regWeekDay': '星期五', 'doctorName': '林明楷', 'timeName': '上午', 'regTotalCount': '20', 'doctortype': '1', 'needMoreInfo': '1', 'regFee': '0.00', 'teamdoctorid': '11745', 'treatFee': '500.00', 'doctorCode': '3622', 'time': '0', 'isTimeReg': '1', 'deptCode': '1109'}], 'teamList': [{'teamName': '林明楷团队号', 'teamId': '11745'}]}
-2023-08-12 01:05:01,592  has leave: []
-2023-08-12 01:05:01,592  ----------> 没有号了!!!
-2023-08-12 01:05:01,592  
-------------end-----------------
