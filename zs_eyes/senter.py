@@ -8,40 +8,68 @@ import requests
 
 def message(tel: str, msg: str) -> bool:
 
-    adb_exec = 'adb shell am start -a android.intent.action.SENDTO -d smsto:%s --es sms_body "%s"'
-    action = adb_exec % (tel, msg)
-    logger.info(action)
-    p1 = subprocess.Popen(action, shell=True, stdout=subprocess.PIPE)
-    logger.info("code: " + str(p1.returncode))
+    for retry in range(3):
+        adb_exec = 'adb shell \'am start -a android.intent.action.SENDTO -d smsto:%s --es sms_body "%s"\''
+        action = adb_exec % (tel, msg)
+        logger.info(action)
+        p1 = subprocess.Popen(action, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p1.wait()
 
-    time.sleep(0.5)
+        stdout, stderr = p1.communicate()
+        logger.info("code: %d, out: %s, err:%s" % (p1.returncode, stdout, stderr))
 
-    # 移动发送按钮的坐标
-    action = 'adb "input keyevent 22 && input keyevent 22"'
-    logger.info(action)
-    p2 = subprocess.Popen(action, shell=True, stdout=subprocess.PIPE)
-    logger.info("code: " + str(p2.returncode))
+        if p1.returncode != 0:
+            time.sleep(0.5)
+            continue
 
-    return p1.returncode == 0 and p2.returncode == 0
+        time.sleep(0.5)
+
+        # 移动发送按钮的坐标
+        action = 'adb shell \'input keyevent 22 && input keyevent 22 && input keyevent 66\''
+        logger.info(action)
+        p2 = subprocess.Popen(action, shell=True, stdout=subprocess.PIPE)
+        p2.wait()
+
+        stdout, stderr = p2.communicate()
+        logger.info("code: %d, out: %s, err:%s" % (p2.returncode, stdout, stderr))
+
+        if p2.returncode != 0:
+            time.sleep(0.5)
+            continue
+
+        return True
+
+    return False
 
 
 def call(tel: str, wait: int) -> bool:
 
-    adb_exec = 'adb shell am start -a android.intent.action.CALL -d tel:%s'
-    action = adb_exec % tel
-    logger.info(action)
-    p1 = subprocess.Popen(action, shell=True, stdout=subprocess.PIPE)
+    for retry in range(3):
+        adb_exec = 'adb shell am start -a android.intent.action.CALL -d tel:%s'
+        action = adb_exec % tel
+        logger.info(action)
+        p1 = subprocess.Popen(action, shell=True, stdout=subprocess.PIPE)
+        p1.wait()
 
-    # 持续call
-    time.sleep(wait)
+        stdout, stderr = p1.communicate()
+        logger.info("code: %d, out: %s, err:%s" % (p1.returncode, stdout, stderr))
+
+        if p1.returncode != 0:
+            time.sleep(0.5)
+            continue
+
+        # 持续call
+        time.sleep(wait)
 
     # 挂断
     action = 'adb shell input keyevent 6'
     logger.info(action)
     p2 = subprocess.Popen(action, shell=True, stdout=subprocess.PIPE)
-    logger.info("code: " + str(p2.returncode))
+    p2.wait()
 
-    return p1.returncode == 0 and p2.returncode == 0
+    stdout, stderr = p2.communicate()
+    logger.info("code: %d, out: %s, err:%s" % (p2.returncode, stdout, stderr))
+    return p2.returncode == 0
 
 
 def pushpush(title, p_content, pushplus_token):
@@ -63,3 +91,7 @@ def pushpush(title, p_content, pushplus_token):
     headers = {'Content-Type': 'application/json'}
 
     requests.post(url=url, data=body, headers=headers)
+
+
+if __name__ == "__main__":
+    message('15018444971', 'err')
