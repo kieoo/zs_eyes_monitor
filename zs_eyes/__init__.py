@@ -1,4 +1,5 @@
 import logging
+import os
 
 FORMAT = '%(asctime)s  %(message)s'
 
@@ -10,6 +11,8 @@ logger.addHandler(handler)
 
 logger.info("set log ....")
 
-host = "xxx"
-doctorCode = "xxx"
-deptCode = "xxx"
+host = os.getenv('HOST')
+doctorCode = os.getenv('DOCTOR_CODE')
+deptCode = os.getenv('DEPT_CODE')
+callTel = os.getenv('CALL_TEL')
+pushToken = os.getenv('PUSH_TOKEN')

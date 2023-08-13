@@ -1,6 +1,18 @@
 from zs_eyes import logger, doctorCode, deptCode
 import requests
 import json
+import time
+
+
+def human_read(raw: list) -> str:
+    read = "有号, 信息如下:"
+    num = 1
+    for recode in raw:
+        read += '\n' + recode.get('key') + ''
+        for info in recode.get('more_info', []):
+            read += "\n\t编:%d,时:%s,余:%s" % (num, info.get('data_range', ''), info.get('regLeaveCount', '0'))
+            num += 1
+    return read
 
 
 def check_registration_result(raw_resp: dict) -> (bool, list):
@@ -39,15 +51,23 @@ def get_registration(g_host: str) -> dict:
         'isTeam': ""
     }
     logger.info("[req]: %s, %s" % (path, json.dumps(params)))
-    result = requests.post(url=g_host + path, params=params)
-    if result.ok:
-        logger.info("[resp]: %s" % result.json())
-        print("[resp]: %s" % result.json())
-        return result.json()
-    else:
-        logger.error("code:%s, content:%s" % (result.status_code, result.content))
-        print(result.content)
-        return dict()
+
+    retry = 3
+    while True:
+        result = requests.post(url=g_host + path, params=params)
+        if result.ok:
+            logger.info("[resp]: %s" % result.json())
+            print("[resp]: %s" % result.json())
+            return result.json()
+        else:
+            logger.error("code:%s, content:%s" % (result.status_code, result.content))
+            print(result.content)
+            if retry:
+                retry -= 1
+                logger.warn("retry...")
+                time.sleep(0.5)
+                continue
+            return dict()
 
 
 def check_info_result(raw_result: dict) -> list:
@@ -83,17 +103,26 @@ def get_reg_more_info(g_host: str, registration_result: list) -> dict:
             'patientId': ""
         }
         logger.info("[req]: %s, %s" % (path, json.dumps(params)))
-        result = requests.post(url=g_host + path, params=params)
-        key = "%s_%s_%s" % (reg.get('regDate'), reg.get('regWeekDay'), reg.get('doctorName'))
-        key_info = "日期:%s, 星期:%s, 医生:%s" % (reg.get('regDate'), reg.get('regWeekDay'), reg.get('doctorName'))
-        if key not in info_list:
-            info_list[key] = {'key_info': key_info, 'more_info': []}
-        if result.ok:
-            logger.info("[resp]: %s" % result.json())
-            print("[resp]: %s" % result.json())
-            info_list[key]['more_info'].append(result.json())
-        else:
-            logger.error("code:%s, content:%s" % (result.status_code, result.content))
-            print(result.content)
-            continue
+
+        retry = 3
+        while True:
+            result = requests.post(url=g_host + path, params=params)
+            key = "%s_%s_%s" % (reg.get('regDate'), reg.get('regWeekDay'), reg.get('doctorName'))
+            key_info = "日期:%s, 星期:%s, 医生:%s" % (reg.get('regDate'), reg.get('regWeekDay'), reg.get('doctorName'))
+            if key not in info_list:
+                info_list[key] = {'key_info': key_info, 'more_info': []}
+            if result.ok:
+                logger.info("[resp]: %s" % result.json())
+                print("[resp]: %s" % result.json())
+                info_list[key]['more_info'].append(result.json())
+                break
+            else:
+                logger.error("code:%s, content:%s" % (result.status_code, result.content))
+                print(result.content)
+                if retry:
+                    retry -= 1
+                    logger.warn("retry...")
+                    time.sleep(0.5)
+                    continue
+                break
     return info_list
