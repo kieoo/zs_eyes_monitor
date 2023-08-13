@@ -24,4 +24,4 @@ if __name__ == "__main__":
     if time.strftime("%H") in [17, 22, 10, 15]:
         pushpush("状态检查", "OK", pushToken)
     print("\n------------end: %s-----------------" % time.strftime("%c"))
-    logger.info("------------end-----------------")
+    logger.info("------------end: %s-----------------" % time.strftime("%c"))
