@@ -14,7 +14,7 @@ FORMAT = '%(asctime)s  %(message)s'
 
 logger = logging.getLogger('log')
 logger.setLevel(logging.INFO)
-handler = logging.FileHandler(logPath, 'w', encoding='utf-8')
+handler = logging.FileHandler(logPath, 'a', encoding='utf-8')
 handler.setFormatter(logging.Formatter(FORMAT))
 logger.addHandler(handler)
 

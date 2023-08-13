@@ -10,7 +10,7 @@ if __name__ == "__main__":
 
     time.sleep(random.randint(1, 10))
 
-    for retry in range(6):
+    for retry in range(20):
         logger.info("--- check times:%d ---", retry)
         r, content = check_registration_result(get_registration(host))
         if r:
@@ -22,13 +22,14 @@ if __name__ == "__main__":
             logger.info("start send....")
             send_result = message(callTel, h_content)
             if send_result:
-                call(callTel, 20)
+                # call(callTel, 20)
                 pushpush("发现订单", h_content, pushToken)
                 break
             else:
                 logger.error("send mms failure...")
 
         wait = 10 + random.randint(1, 10)
+        print("wait: %d." % wait)
         logger.info("wait: %d." % wait)
         time.sleep(wait)
 
