@@ -2,6 +2,7 @@ from zs_eyes.scanner import *
 from zs_eyes import host, logger, callTel, pushToken
 from zs_eyes.senter import *
 import random
+import os
 
 if __name__ == "__main__":
     print("------------start-----------------\n")
@@ -10,7 +11,7 @@ if __name__ == "__main__":
 
     time.sleep(random.randint(1, 10))
 
-    for retry in range(20):
+    for retry in range(int(os.getenv('RUN_TIMES'), 20)):
         logger.info("--- check times:%d ---", retry)
         r, content = check_registration_result(get_registration(host))
         if r:
