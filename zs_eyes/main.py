@@ -11,7 +11,7 @@ if __name__ == "__main__":
 
     time.sleep(random.randint(1, 10))
 
-    for retry in range(int(os.getenv('RUN_TIMES'), 20)):
+    for retry in range(int(os.getenv('RUN_TIMES', 20))):
         logger.info("--- check times:%d ---", retry)
         r, content = check_registration_result(get_registration(host))
         if r:
