@@ -13,6 +13,7 @@ def message(tel: str, msg: str) -> bool:
         action = adb_exec % (tel, msg)
         logger.info(action)
         p1 = subprocess.Popen(action, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        # Popen是异步的, 要等待执行结果
         p1.wait()
 
         stdout, stderr = p1.communicate()
@@ -60,6 +61,7 @@ def call(tel: str, wait: int) -> bool:
 
         # 持续call
         time.sleep(wait)
+        break
 
     # 挂断
     action = 'adb shell input keyevent 6'
@@ -94,4 +96,4 @@ def pushpush(title, p_content, pushplus_token):
 
 
 if __name__ == "__main__":
-    message('15018444971', 'err')
+    message('xx', 'err')
