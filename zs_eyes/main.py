@@ -9,7 +9,7 @@ if __name__ == "__main__":
     logger.info("------------start: %s-----------------\n" % time.strftime("%c"))
     h = time.strftime("%H")
 
-    time.sleep(random.randint(1, 10))
+    time.sleep(random.randint(55, 58))
 
     for retry in range(int(os.getenv('RUN_TIMES', 20))):
         logger.info("--- check times:%d ---", retry)
@@ -29,13 +29,14 @@ if __name__ == "__main__":
             else:
                 logger.error("send mms failure...")
 
-        wait = 10 + random.randint(1, 10)
+        wait = random.randint(1, 3)
+        # wait = 1
         print("wait: %d." % wait)
         logger.info("wait: %d." % wait)
         time.sleep(wait)
 
-    if h in ['17', '22', '10', '15']:
-        pushpush("状态检查", "OK", pushToken)
+    # if h in ['17', '23', '9', '7']:
+    pushpush("状态检查", "OK", pushToken)
 
     print("\n------------end: %s-----------------" % time.strftime("%c"))
     logger.info("------------end: %s-----------------" % time.strftime("%c"))

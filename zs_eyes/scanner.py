@@ -1,4 +1,4 @@
-from zs_eyes import logger, doctorCode, deptCode
+from zs_eyes import logger, doctorCode, deptCode, regWeekDay
 import requests
 import json
 import time
@@ -17,14 +17,23 @@ def human_read(raw: list) -> str:
 
 def check_registration_result(raw_resp: dict) -> (bool, list):
     l = raw_resp.get("list", [])
+
+    # 普通费用
+    # 有号
+    # 门诊
+    # 指定星期
     has_leave = [{'regDate': reg.get('regDate'),
                   'regWeekDay': reg.get('regWeekDay'),
                   'doctorName': reg.get('doctorName'),
-                  'treatFee': reg.get('treatFee')}
+                  'treatFee': reg.get('treatFee'),
+                  'time': reg.get('time')}
                  for reg in l
                  if float(reg.get('treatFee', 0)) <= 60
-                 and
-                 int(reg.get('regLeaveCount', 0)) > 0]
+                 and int(reg.get('regLeaveCount', 0)) > 0
+                 and int(reg.get('deptCode', 0)) == int(deptCode)
+                 and reg.get('regWeekDay', "0") in regWeekDay
+                 and reg.get('timeName', "0") in regWeekDay]
+
     logger.info("has leave: %s" % has_leave)
     print("has leave : %d" % len(has_leave))
     if len(has_leave) == 0:
@@ -99,7 +108,7 @@ def get_reg_more_info(g_host: str, registration_result: list) -> dict:
             'orgCode': "2",
             'deptCode': deptCode,
             'date': reg.get('regDate'),
-            'time': "1",
+            'time': reg.get('time'),
             'patientId': ""
         }
         logger.info("[req]: %s, %s" % (path, json.dumps(params)))

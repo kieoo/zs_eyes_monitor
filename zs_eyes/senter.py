@@ -96,4 +96,4 @@ def pushpush(title, p_content, pushplus_token):
 
 
 if __name__ == "__main__":
-    message('xx', 'err')
+    message('15018444971', '测试免打扰')
