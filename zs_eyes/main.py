@@ -7,6 +7,17 @@ import os
 if __name__ == "__main__":
     print("------------start-----------------\n")
     logger.info("------------start: %s-----------------\n" % time.strftime("%c"))
+
+    data = time.strftime("%Ymd")
+
+    try:
+        for reg_data in os.listdir("reg_data"):
+            if reg_data > data:
+                logger.info("------------end: has register %s-----------------\n" % data)
+                exit(0)
+    except Exception:
+        pass
+
     h = time.strftime("%H")
 
     time.sleep(random.randint(55, 58))
