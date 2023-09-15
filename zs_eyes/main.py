@@ -8,7 +8,7 @@ if __name__ == "__main__":
     print("------------start-----------------\n")
     logger.info("------------start: %s-----------------\n" % time.strftime("%c"))
 
-    data = time.strftime("%Ymd")
+    data = time.strftime("%Y%m%d")
 
     try:
         for reg_data in os.listdir("reg_data"):
@@ -34,9 +34,9 @@ if __name__ == "__main__":
             logger.info(h_content)
 
             logger.info("start send....")
-
+            call(callTel, 20)
             send_result = message(callTel, h_content)
-            # call(callTel, 20)
+            send_result = pushpush("发现订单", h_content, pushToken)
             send_result = pushpush("发现订单", h_content, pushToken, os.getenv("TO_TOKEN", None))
             if send_result:
                 break
@@ -44,11 +44,11 @@ if __name__ == "__main__":
                 logger.error("send mms failure...")
                 break
 
-        wait = random.randint(1, 3)
+        wait = random.randint(1, 10)
         # wait = 1
         print("wait: %d." % wait)
         logger.info("wait: %d." % wait)
-        time.sleep(wait)
+        time.sleep(float(wait)*0.3)
 
     # if h in ['17', '23', '9', '7']:
     pushpush("状态检查", "OK", pushToken)
