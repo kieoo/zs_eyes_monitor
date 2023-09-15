@@ -91,11 +91,14 @@ def pushpush(title, p_content, pushplus_token):
     }
     body = json.dumps(data).encode(encoding='utf-8')
     headers = {'Content-Type': 'application/json'}
-
+    result = False
     for retry in range(3):
         result = requests.post(url=url, data=body, headers=headers)
         if result.ok:
+            result = True
             break
+    return result
+
 
 if __name__ == "__main__":
     message('15018444971', '测试免打扰')
