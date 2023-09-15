@@ -27,18 +27,22 @@ if __name__ == "__main__":
         r, content = check_registration_result(get_registration(host))
         if r:
             has_recodes = check_info_result(get_reg_more_info(host, content))
+            if len(has_recodes) <= 0:
+                continue
             h_content = human_read(has_recodes)
             print(h_content)
             logger.info(h_content)
 
             logger.info("start send....")
+
             send_result = message(callTel, h_content)
+            # call(callTel, 20)
+            pushpush("发现订单", h_content, pushToken)
             if send_result:
-                # call(callTel, 20)
-                pushpush("发现订单", h_content, pushToken)
                 break
             else:
                 logger.error("send mms failure...")
+                break
 
         wait = random.randint(1, 3)
         # wait = 1
