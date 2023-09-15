@@ -74,7 +74,7 @@ def call(tel: str, wait: int) -> bool:
     return p2.returncode == 0
 
 
-def pushpush(title, p_content, pushplus_token, topic=None):
+def pushpush(title, p_content, pushplus_token, to=None):
     """
     使用pushplus服务做微信消息推送
     http://www.pushplus.plus/
@@ -88,7 +88,7 @@ def pushpush(title, p_content, pushplus_token, topic=None):
         "title": title,
         "template": "txt",
         "content": content,
-        "topic": topic
+        "to": to
     }
     body = json.dumps(data).encode(encoding='utf-8')
     headers = {'Content-Type': 'application/json'}
