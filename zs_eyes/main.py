@@ -37,7 +37,7 @@ if __name__ == "__main__":
 
             send_result = message(callTel, h_content)
             # call(callTel, 20)
-            send_result = pushpush("发现订单", h_content, pushToken, 1)
+            send_result = pushpush("发现订单", h_content, pushToken, "zsyk")
             if send_result:
                 break
             else:
